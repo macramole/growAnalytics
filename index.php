@@ -39,7 +39,7 @@
 	});
 
 	function type(d) {
-		d.date = parseTime(d.created);
+		d.date = parseTime(d.createdb);
 	    d.value = +d.value;
 	    return d;
 	}
