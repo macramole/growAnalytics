@@ -5,10 +5,10 @@ uart.setup(0,115200,8,0,1)
 wifi.setmode(wifi.STATION)
 
 station_cfg={}
--- station_cfg.ssid="casamacramole"
--- station_cfg.pwd="supermacramole"
-station_cfg.ssid="gallardcore"
-station_cfg.pwd="gallardo437"
+station_cfg.ssid="casamacramole"
+station_cfg.pwd="supermacramole"
+-- station_cfg.ssid="gallardcore"
+-- station_cfg.pwd="gallardo437"
 wifi.sta.config(station_cfg)
 
 wifi.sta.connect()
