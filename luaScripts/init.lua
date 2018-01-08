@@ -25,7 +25,9 @@ PIN_SOIL_2 = 3
 PIN_SOIL_3 = 4
 
 -- POST_URL = "http://192.168.0.27/postTest/index.php"
-POST_URL = "http://192.168.0.27:8080"
+-- POST_URL = "http://192.168.0.27:8080"
+-- POST_URL = "http://192.168.0.27/growAnalytics/save.php"
+POST_URL = "http://leandrogarber.info/proyectos/growAnalytics/save.php"
 
 gpio.mode(PIN_SOIL_1,gpio.OUTPUT)
 gpio.mode(PIN_SOIL_2,gpio.OUTPUT)
@@ -95,7 +97,7 @@ miTimer:alarm(5000, tmr.ALARM_AUTO, function()
     
     gpio.write(PIN_SOIL_3,gpio.HIGH)
     tmr.delay(100000)
-    jsonToSend = jsonToSend .. '"humedadTierra3":"' .. ( 1024 - adc.read(0) ) .. '", '
+    jsonToSend = jsonToSend .. '"humedadTierra3":"' .. ( 1024 - adc.read(0) ) .. '" ' -- guarda que le saque la coma
     gpio.write(PIN_SOIL_3,gpio.LOW)
     tmr.delay(100000)
 
@@ -117,3 +119,5 @@ miTimer:alarm(5000, tmr.ALARM_AUTO, function()
         end
     )
 end)
+
+-- miTimer:unregister()
