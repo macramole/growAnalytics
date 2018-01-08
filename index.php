@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
+	<style>
+		body {
+			font-family: "Arial";
+		}
+		#lastCheck {
+			padding-left: 5%;
+			font-size: 0.8em;
+		}
+	</style>
 </head>
 <body>
 
 <div id="myDiv"></div>
+<div id="lastCheck">Last Check: <span></span></div>
 
 <script src="//d3js.org/d3.v4.min.js"></script>
 <script src="//cdn.plot.ly/plotly-latest.min.js"></script>
@@ -35,7 +45,8 @@
 
 		Plotly.newPlot('myDiv', data);
 
-
+		divLastCheck = document.querySelector("#lastCheck span");
+		divLastCheck.innerHTML = data[0].x[ data[0].x.length - 1 ];
 	});
 
 	function type(d) {

@@ -39,6 +39,8 @@ miTimer:alarm(5000, tmr.ALARM_AUTO, function()
     
     -- DHT
     status, temp, humi, temp_dec, humi_dec = dht.read(PIN_DHT_AFUERA)
+    strTemperatura = -1
+    strHumedad = -1
     if status == dht.OK then
         print(string.format("AFUERA Temperature:%d.%03d;Humidity:%d.%03d\r\n",
               math.floor(temp),
@@ -49,16 +51,18 @@ miTimer:alarm(5000, tmr.ALARM_AUTO, function()
     
         strTemperatura = math.floor(temp) .. "." .. temp_dec
         strHumedad = math.floor(humi) .. "." .. humi_dec
-
-        jsonToSend = jsonToSend .. '"temperaturaAfuera":"' .. strTemperatura .. '", "humedadAfuera" : "' .. strHumedad .. '", '
     
     elseif status == dht.ERROR_CHECKSUM then
         print( "DHT 1 Checksum error." )
     elseif status == dht.ERROR_TIMEOUT then
         print( "DHT 1 timed out." )
     end
+
+    jsonToSend = jsonToSend .. '"temperaturaAfuera":"' .. strTemperatura .. '", "humedadAfuera" : "' .. strHumedad .. '", '
     
     status, temp, humi, temp_dec, humi_dec = dht.read(PIN_DHT_ADENTRO)
+    strTemperatura = -1
+    strHumedad = -1
     if status == dht.OK then
         print(string.format("ADENTRO Temperature:%d.%03d;Humidity:%d.%03d\r\n",
               math.floor(temp),
@@ -69,14 +73,14 @@ miTimer:alarm(5000, tmr.ALARM_AUTO, function()
     
         strTemperatura = math.floor(temp) .. "." .. temp_dec
         strHumedad = math.floor(humi) .. "." .. humi_dec
-        
-        jsonToSend = jsonToSend .. '"temperaturaAdentro":"' .. strTemperatura .. '", "humedadAdentro" : "' .. strHumedad .. '", '
     
-    elseif status == dht.ERROR_CHECKSUM then
+    elseif status == dht.ERROR_CHECKSUM  then
         print( "DHT 2 Checksum error." )
     elseif status == dht.ERROR_TIMEOUT then
         print( "DHT 2 timed out." )
     end
+
+    jsonToSend = jsonToSend .. '"temperaturaAdentro":"' .. strTemperatura .. '", "humedadAdentro" : "' .. strHumedad .. '", '
 
     -- ADC
     gpio.write(PIN_SOIL_1,gpio.LOW)
