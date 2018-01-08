@@ -6,7 +6,7 @@
 			font-family: "Arial";
 		}
 		#lastCheck {
-			padding-left: 5%;
+			padding-left: 3%;
 			font-size: 0.8em;
 		}
 	</style>
