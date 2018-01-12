@@ -2,7 +2,18 @@
 
 include_once("db.config.php");
 
-$sensorData = DB::query("SELECT *, CONVERT_TZ(created,'+00:00','-03:00') as createdb FROM sensors");
+$sensorData = DB::query("
+	SELECT
+		*,
+		CONVERT_TZ(created,'+00:00','-03:00') as createdb
+	FROM
+		sensors
+	");
+
+/*
+-- WHERE
+	created BETWEEN DATE_SUB(NOW(), INTERVAL 1 DAY) AND NOW()
+	*/
 
 foreach( $sensorData[0] as $fieldName => $field ) {
 	echo "$fieldName\t";

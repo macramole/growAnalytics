@@ -20,6 +20,26 @@
 <script src="//cdn.plot.ly/plotly-latest.min.js"></script>
 <script>
 	var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
+	var lastValue = {};
+
+	d3.tsv("getLast.php", type, function(error, tsvData) {
+	  	if (error) throw error;
+
+		data = [];
+		deviceIDs = [];
+
+		for(row of tsvData) {
+			lastValue[ row.deviceID ] = row.value;
+		};
+
+		console.log(lastValue);
+	});
+
+	function type(d) {
+		d.date = parseTime(d.createdb);
+	    d.value = +d.value;
+	    return d;
+	}
 
 	d3.tsv("get.php", type, function(error, tsvData) {
 	  	if (error) throw error;
