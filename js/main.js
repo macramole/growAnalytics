@@ -120,7 +120,6 @@ function parseData( divGraph ) {
 }
 
 // Construyo los gráficos
-
 var i = 0;
 for ( var graph in graphs ) {
     d3.tsv("get.php?t=" + i, type, parseData( graph ) );
@@ -131,4 +130,9 @@ function type(d) {
     d.date = parseTime(d.createdb);
     d.value = +d.value;
     return d;
+}
+
+document.body.onload = function() {
+    $loading = document.getElementById("loading");
+    $loading.className += "hide";
 }
