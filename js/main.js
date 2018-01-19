@@ -2,56 +2,64 @@ var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
 var lastValue = {};
 var lastChecked = false;
 
-var graphs = ["graphTemperaturas", "graphHumedades", "graphTierras"]
-var graphShapes = {
-    "graphTemperaturas" : [
-        {
-            type : 'rect',
-            xref : 'paper',
-            yref : 'y',
-            x0 : 0,
-            x1 : 1,
-            y0 : 18,
-            y1 : 26,
-            fillcolor : "#00FF00",
-            opacity : 0.3,
-            line : {
-                width : 0
+var graphs = {
+    "graphTemperaturas" : {
+        "data" : [],
+        "shapes" : [
+            {
+                type : 'rect',
+                xref : 'paper',
+                yref : 'y',
+                x0 : 0,
+                x1 : 1,
+                y0 : 18,
+                y1 : 26,
+                fillcolor : "#00FF00",
+                opacity : 0.3,
+                line : {
+                    width : 0
+                }
             }
-        }
-    ],
-    "graphHumedades" : [
-        {
-            type : 'rect',
-            xref : 'paper',
-            yref : 'y',
-            x0 : 0,
-            x1 : 1,
-            y0 : 40,
-            y1 : 50,
-            fillcolor : "#00FF00",
-            opacity : 0.3,
-            line : {
-                width : 0
+        ]
+    },
+    "graphHumedades" : {
+        "data" : [],
+        "shapes" : [
+            {
+                type : 'rect',
+                xref : 'paper',
+                yref : 'y',
+                x0 : 0,
+                x1 : 1,
+                y0 : 40,
+                y1 : 50,
+                fillcolor : "#00FF00",
+                opacity : 0.3,
+                line : {
+                    width : 0
+                }
             }
-        }
-    ],
-    "graphTierras" : [
-        {
-            type : 'rect',
-            xref : 'paper',
-            yref : 'y',
-            x0 : 0,
-            x1 : 1,
-            y0 : 500,
-            y1 : 520,
-            fillcolor : "#FF0000",
-            opacity : 0.4,
-            line : {
-                width : 0
+        ]
+    },
+    "graphTierras" : {
+        "data" : [],
+        "shapes" : [
+            {
+                type : 'rect',
+                xref : 'paper',
+                yref : 'y',
+                x0 : 0,
+                x1 : 1,
+                y0 : 500,
+                y1 : 520,
+                fillcolor : "#FF0000",
+                opacity : 0.4,
+                line : {
+                    width : 0
+                }
             }
-        }
-    ]
+        ]
+    }
 };
 
 // d3.tsv("getLast.php", type, function(error, tsvData) {
@@ -98,7 +106,7 @@ function parseData( divGraph ) {
 
         var layout = {
             title : divGraph.substr(5),
-            shapes : graphShapes[divGraph]
+            shapes : graphs[divGraph].shapes
         };
 
         Plotly.newPlot(divGraph, data, layout);
@@ -113,8 +121,10 @@ function parseData( divGraph ) {
 
 // Construyo los gráficos
 
-for ( var i = 0 ; i < graphs.length ; i++ ) {
-    d3.tsv("get.php?t=" + i, type, parseData( graphs[i] ) );
+var i = 0;
+for ( var graph in graphs ) {
+    d3.tsv("get.php?t=" + i, type, parseData( graph ) );
+    i++;
 }
 
 function type(d) {
