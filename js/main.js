@@ -2,6 +2,58 @@ var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
 var lastValue = {};
 var lastChecked = false;
 
+var graphs = ["graphTemperaturas", "graphHumedades", "graphTierras"]
+var graphShapes = {
+    "graphTemperaturas" : [
+        {
+            type : 'rect',
+            xref : 'paper',
+            yref : 'y',
+            x0 : 0,
+            x1 : 1,
+            y0 : 18,
+            y1 : 26,
+            fillcolor : "#00FF00",
+            opacity : 0.3,
+            line : {
+                width : 0
+            }
+        }
+    ],
+    "graphHumedades" : [
+        {
+            type : 'rect',
+            xref : 'paper',
+            yref : 'y',
+            x0 : 0,
+            x1 : 1,
+            y0 : 40,
+            y1 : 50,
+            fillcolor : "#00FF00",
+            opacity : 0.3,
+            line : {
+                width : 0
+            }
+        }
+    ],
+    "graphTierras" : [
+        {
+            type : 'rect',
+            xref : 'paper',
+            yref : 'y',
+            x0 : 0,
+            x1 : 1,
+            y0 : 500,
+            y1 : 520,
+            fillcolor : "#FF0000",
+            opacity : 0.4,
+            line : {
+                width : 0
+            }
+        }
+    ]
+};
+
 // d3.tsv("getLast.php", type, function(error, tsvData) {
 //     if (error) throw error;
 //
@@ -45,27 +97,9 @@ function parseData( divGraph ) {
         }
 
         var layout = {
-            title : divGraph.substr(5)
+            title : divGraph.substr(5),
+            shapes : graphShapes[divGraph]
         };
-
-        if ( divGraph == "graphTemperaturas" ) {
-            layout.shapes = [
-                {
-                    type : 'rect',
-                    xref : 'paper',
-                    yref : 'y',
-                    x0 : 0,
-                    x1 : 1,
-                    y0 : 20,
-                    y1 : 28,
-                    fillcolor : "#00FF00",
-                    opacity : 0.3,
-                    line : {
-                        width : 0
-                    }
-                }
-            ];
-        }
 
         Plotly.newPlot(divGraph, data, layout);
 
@@ -77,10 +111,11 @@ function parseData( divGraph ) {
     }
 }
 
-d3.tsv("get.php?t=0", type, parseData("graphTemperaturas") );
-d3.tsv("get.php?t=1", type, parseData("graphHumedades") );
-d3.tsv("get.php?t=2", type, parseData("graphTierras") );
+// Construyo los gráficos
 
+for ( var i = 0 ; i < graphs.length ; i++ ) {
+    d3.tsv("get.php?t=" + i, type, parseData( graphs[i] ) );
+}
 
 function type(d) {
     d.date = parseTime(d.createdb);
