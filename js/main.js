@@ -51,9 +51,9 @@ var graphs = {
                 x0 : 0,
                 x1 : 1,
                 y0 : 500,
-                y1 : 520,
+                y1 : 530,
                 fillcolor : "#FF0000",
-                opacity : 0.4,
+                opacity : 0.3,
                 line : {
                     width : 0
                 }
