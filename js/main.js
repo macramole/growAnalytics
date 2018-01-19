@@ -48,6 +48,25 @@ function parseData( divGraph ) {
             title : divGraph.substr(5)
         };
 
+        if ( divGraph == "graphTemperaturas" ) {
+            layout.shapes = [
+                {
+                    type : 'rect',
+                    xref : 'paper',
+                    yref : 'y',
+                    x0 : 0,
+                    x1 : 1,
+                    y0 : 20,
+                    y1 : 28,
+                    fillcolor : "#00FF00",
+                    opacity : 0.3,
+                    line : {
+                        width : 0
+                    }
+                }
+            ];
+        }
+
         Plotly.newPlot(divGraph, data, layout);
 
         if ( !lastChecked ) {
