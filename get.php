@@ -2,7 +2,7 @@
 
 include_once("db.config.php");
 
-$queryTypes = []
+$queryTypes = [];
 $queryTypes[0] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'temperaturaAfuera' OR deviceID = 'temperaturaAdentro' )";
 $queryTypes[1] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'humedadAfuera' OR deviceID = 'humedadAdentro' )";
 $queryTypes[2] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'humedadTierra1' OR deviceID = 'humedadTierra2' OR deviceID = 'humedadTierra3' )";
