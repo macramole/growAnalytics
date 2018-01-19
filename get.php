@@ -3,13 +3,14 @@
 include_once("db.config.php");
 
 $sensorData = DB::query("
-	SELECT
-		*,
-		CONVERT_TZ(created,'+00:00','-03:00') as createdb
-	FROM
-		sensors
-	WHERE
-		created >= DATE_SUB(NOW(), INTERVAL 2 HOUR) 
+SELECT
+	*,
+	CONVERT_TZ(created,'+00:00','-03:00') as createdb
+FROM
+	sensors
+WHERE
+	created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND
+	( deviceID = 'temperaturaAfuera' OR deviceID = 'temperaturaAdentro' )
 	");
 
 /*
