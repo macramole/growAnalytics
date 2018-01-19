@@ -8,6 +8,8 @@ $sensorData = DB::query("
 		CONVERT_TZ(created,'+00:00','-03:00') as createdb
 	FROM
 		sensors
+	WHERE
+		created >= DATE_SUB(NOW(), INTERVAL 2 HOUR) 
 	");
 
 /*
