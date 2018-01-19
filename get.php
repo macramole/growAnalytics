@@ -2,6 +2,11 @@
 
 include_once("db.config.php");
 
+$queryTypes = []
+$queryTypes[0] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'temperaturaAfuera' OR deviceID = 'temperaturaAdentro' )";
+$queryTypes[1] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'humedadAfuera' OR deviceID = 'humedadAdentro' )";
+$queryTypes[2] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'humedadTierra1' OR deviceID = 'humedadTierra2' OR deviceID = 'humedadTierra3' )";
+
 $sensorData = DB::query("
 SELECT
 	*,
@@ -9,14 +14,7 @@ SELECT
 FROM
 	sensors
 WHERE
-	created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND
-	( deviceID = 'temperaturaAfuera' OR deviceID = 'temperaturaAdentro' )
-	");
-
-/*
--- WHERE
-	created BETWEEN DATE_SUB(NOW(), INTERVAL 1 DAY) AND NOW()
-	*/
+	" . $queryTypes[ $_GET["t"] ] );
 
 foreach( $sensorData[0] as $fieldName => $field ) {
 	echo "$fieldName\t";
