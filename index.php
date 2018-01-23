@@ -33,14 +33,16 @@
 	<h4>Loading data...</h4>
 </div>
 
-<div id="graphTemperaturas"></div>
+<!-- <div id="graphTemperaturas"></div>
 <div id="graphHumedades"></div>
-<div id="graphTierras"></div>
+<div id="graphTierras"></div> -->
+
+<div id="chart"></div>
 
 <div id="lastCheck">Last Check: <span></span></div>
 
 <script src="//d3js.org/d3.v4.min.js"></script>
-<script src="//cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="js/plotly-latest.min.js"></script>
 <script src="js/main.js" charset="utf-8"></script>
 
 </body>

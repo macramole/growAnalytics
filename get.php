@@ -2,19 +2,38 @@
 
 include_once("db.config.php");
 
-$queryTypes = [];
-$queryTypes[0] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'temperaturaAfuera' OR deviceID = 'temperaturaAdentro' )";
-$queryTypes[1] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'humedadAfuera' OR deviceID = 'humedadAdentro' )";
-$queryTypes[2] = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY) AND ( deviceID = 'humedadTierra1' OR deviceID = 'humedadTierra2' OR deviceID = 'humedadTierra3' )";
+$from = $to = null;
+if ( isset($_GET["from"]) ) {
+	$from = $_GET["from"];
+}
+if ( isset($_GET["to"]) ) {
+	$to = $_GET["to"];
+}
 
-$sensorData = DB::query("
+$queryWhere = "created >= DATE_SUB(NOW(), INTERVAL 1 DAY)";
+if ( $from != null ) {
+	$queryWhere = "created BETWEEN %s AND %s";
+}
+
+// $sql = "
+// SELECT
+// 	*,
+// 	CONVERT_TZ(created,'+00:00','-03:00') as createdb
+// FROM
+// 	sensors
+// WHERE
+// 	" . $queryTypes[ $_GET["t"] ];
+$sql = "
 SELECT
-	*,
-	CONVERT_TZ(created,'+00:00','-03:00') as createdb
+	created,
+	deviceID,
+	value
 FROM
 	sensors
 WHERE
-	" . $queryTypes[ $_GET["t"] ] );
+	$queryWhere";
+
+$sensorData = DB::query($sql, $from, $to);
 
 foreach( $sensorData[0] as $fieldName => $field ) {
 	echo "$fieldName\t";
