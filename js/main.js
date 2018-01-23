@@ -49,6 +49,16 @@ var shapes = [
     }
 ];
 
+var deviceIDs = [
+    "temperaturaAdentro",
+    "temperaturaAfuera",
+    "humedadAdentro",
+    "humedadAfuera",
+    "humedadTierra1",
+    "humedadTierra2",
+    "humedadTierra3"
+];
+
 // d3.tsv("getLast.php", type, function(error, tsvData) {
 //     if (error) throw error;
 //
@@ -87,14 +97,6 @@ function updateData() {
     return function(error, tsvData) {
         if (error) throw error;
 
-        var deviceIDs = [];
-
-        for(row of tsvData) {
-            if ( deviceIDs.indexOf(row.deviceID) == -1 ) {
-                deviceIDs.push(row.deviceID);
-            }
-        };
-
         for( deviceIDi in deviceIDs ) {
             var deviceID = deviceIDs[deviceIDi]
             var dataByDeviceID = tsvData.filter(function(d) { return d.deviceID == deviceID });
@@ -115,13 +117,6 @@ function parseData() {
         if (error) throw error;
 
         var data = [];
-        var deviceIDs = [];
-
-        for(row of tsvData) {
-            if ( deviceIDs.indexOf(row.deviceID) == -1 ) {
-                deviceIDs.push(row.deviceID);
-            }
-        };
 
         for( deviceID of deviceIDs ) {
             var dataByDeviceID = tsvData.filter(function(d) { return d.deviceID == deviceID });
@@ -143,21 +138,61 @@ function parseData() {
         }
 
         var layout = {
-            title : "Series de tiempo",
             shapes : shapes,
             yaxis : {
-                domain : [ 0, 0.3 ]
+                domain : [ 0, 0.15 ]
             },
             yaxis2 : {
-                domain : [ 0.4, 0.6 ]
+                domain : [ 0.25, 0.55 ]
             },
             yaxis3 : {
-                domain : [ 0.7, 1 ],
+                domain : [ 0.65, 0.95 ],
             },
             xaxis : {
                 anchor : "y"
             },
             height: 800,
+            margin : {
+                l : 40,
+                // r : 0,
+                t : 20,
+                // b : 80
+            },
+            annotations : [
+                {
+                    xref: "paper",
+                    yref: "paper",
+                    x : 0.5,
+                    y : 1,
+                    text : "Temperatura",
+                    showarrow: false,
+                    font : {
+                        size: 17
+                    }
+                },
+                {
+                    xref: "paper",
+                    yref: "paper",
+                    x : 0.5,
+                    y : 0.6,
+                    text : "Humedad",
+                    showarrow: false,
+                    font : {
+                        size: 17
+                    }
+                },
+                {
+                    xref: "paper",
+                    yref: "paper",
+                    x : 0.5,
+                    y : 0.2,
+                    text : "Tierra",
+                    showarrow: false,
+                    font : {
+                        size: 17
+                    }
+                },
+            ]
         };
 
         Plotly.newPlot("chart", data, layout);

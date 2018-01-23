@@ -10,19 +10,11 @@ if ( isset($_GET["to"]) ) {
 	$to = $_GET["to"];
 }
 
-$queryWhere = "created >= DATE_SUB(NOW(), INTERVAL 1 DAY)";
+$queryWhere = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY)";
 if ( $from != null ) {
 	$queryWhere = "created BETWEEN %s AND %s";
 }
 
-// $sql = "
-// SELECT
-// 	*,
-// 	CONVERT_TZ(created,'+00:00','-03:00') as createdb
-// FROM
-// 	sensors
-// WHERE
-// 	" . $queryTypes[ $_GET["t"] ];
 $sql = "
 SELECT
 	created,
@@ -31,7 +23,10 @@ SELECT
 FROM
 	sensors
 WHERE
-	$queryWhere";
+	$queryWhere AND
+	SECOND(created) BETWEEN 0 AND 3
+ORDER BY
+	id";
 
 $sensorData = DB::query($sql, $from, $to);
 
