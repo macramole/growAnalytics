@@ -133,7 +133,10 @@ function parseData() {
                 x : dataByDeviceID.map( function(d) { return d.date } ),
                 y : dataByDeviceID.map( function(d) { return d.value } ),
                 type : "scatter",
-                yaxis : yAxis
+                yaxis : yAxis,
+                // line : {
+                //     shape: "spline"
+                // }
             });
         }
 
@@ -149,7 +152,18 @@ function parseData() {
                 domain : [ 0.65, 0.95 ],
             },
             xaxis : {
-                anchor : "y"
+                anchor : "y",
+                showspikes : true,
+                spikecolor : "#000000",
+                spikethickness : 1,
+                spikemode: "across",
+                spikedash: "solid",
+
+                showgrid: true,
+                gridcolor: "#848484",
+                tick0: "2000-01-15",
+                dtick: "D1"
+
             },
             height: 800,
             margin : {
