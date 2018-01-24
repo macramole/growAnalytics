@@ -59,24 +59,22 @@ var deviceIDs = [
     "humedadTierra3"
 ];
 
-// d3.tsv("getLast.php", type, function(error, tsvData) {
-//     if (error) throw error;
-//
-//     data = [];
-//     deviceIDs = [];
-//
-//     for(row of tsvData) {
-//         lastValue[ row.deviceID ] = row.value;
-//     };
-//
-//     console.log(lastValue);
-// });
-//
-// function type(d) {
-//     d.date = parseTime(d.createdb);
-//     d.value = +d.value;
-//     return d;
-// }
+function getLastData() {
+    d3.tsv("getLast.php", type, function(error, tsvData) {
+        if (error) throw error;
+
+        for(row of tsvData) {
+            lastValue[ row.deviceID ] = row.value;
+
+            var $span = document.getElementById("dataLast_" + row.deviceID);
+            $span.innerHTML = row.value;
+        };
+
+        // console.log(lastValue);
+    });
+}
+getLastData();
+setInterval( getLastData, 10000 );
 
 function getMoreData( dateFrom ) {
     var dateTo = firstDate.toMysqlFormat();

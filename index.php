@@ -1,30 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
-	<style>
-		body {
-			font-family: "Arial";
-			margin: 0;
-		}
-		#lastCheck {
-			padding-left: 3%;
-			font-size: 0.8em;
-		}
-		#loading {
-			background-color: #FFCBD2;
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			z-index: 1900;
-			text-align: center;
-		}
-		#loading h4 {
-			margin-top: -4em;
-		}
-		#loading.hide {
-			visibility: hidden;
-		}
-	</style>
+	<link rel="stylesheet" href="css/growAnalytics.css">
 </head>
 <body>
 
@@ -33,9 +10,52 @@
 	<h4>Loading data...</h4>
 </div>
 
-<!-- <div id="graphTemperaturas"></div>
-<div id="graphHumedades"></div>
-<div id="graphTierras"></div> -->
+<ul id="dataLast">
+	<li id="dataLast_temperaturas">
+		<div class="title">Temperatura</div>
+		<ul>
+			<li class="value">
+				<label>Adentro: </label>
+				<span id="dataLast_temperaturaAdentro"></span>
+			</li>
+			<li class="value">
+				<label>Afuera: </label>
+				<span id="dataLast_temperaturaAfuera"></span>
+			</li>
+		</ul>
+	</li>
+	<li id="dataLast_humedades">
+		<div class="title">Humedad</div>
+		<ul>
+			<li class="value">
+				<label>Adentro: </label>
+				<span id="dataLast_humedadAdentro"></span>
+			</li>
+			<li class="value">
+				<label>Afuera: </label>
+				<span id="dataLast_humedadAfuera"></span>
+			</li>
+		</ul>
+	</li>
+	<li id="dataLast_tierras">
+		<div class="title">Tierra</div>
+		<ul>
+			<li class="value">
+				<label>Planta 1: </label>
+				<span id="dataLast_humedadTierra1"></span>
+			</li>
+			<li class="value">
+				<label>Planta 2: </label>
+				<span id="dataLast_humedadTierra2"></span>
+			</li>
+			<li class="value">
+				<label>Planta 3: </label>
+				<span id="dataLast_humedadTierra3"></span>
+			</li>
+
+		</ul>
+	</li>
+</ul>
 
 <div id="chart"></div>
 
