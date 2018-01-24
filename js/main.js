@@ -143,13 +143,13 @@ function parseData() {
         var layout = {
             shapes : shapes,
             yaxis : {
-                domain : [ 0, 0.15 ]
+                domain : [ 0, 0.25 ]
             },
             yaxis2 : {
-                domain : [ 0.25, 0.55 ]
+                domain : [ 0.35, 0.60 ]
             },
             yaxis3 : {
-                domain : [ 0.65, 0.95 ],
+                domain : [ 0.70, 0.95 ],
             },
             xaxis : {
                 anchor : "y",
@@ -188,7 +188,7 @@ function parseData() {
                     xref: "paper",
                     yref: "paper",
                     x : 0.5,
-                    y : 0.6,
+                    y : 0.63,
                     text : "Humedad",
                     showarrow: false,
                     font : {
@@ -199,7 +199,7 @@ function parseData() {
                     xref: "paper",
                     yref: "paper",
                     x : 0.5,
-                    y : 0.2,
+                    y : 0.26,
                     text : "Tierra",
                     showarrow: false,
                     font : {
