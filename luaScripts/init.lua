@@ -9,8 +9,6 @@ wifi.setmode(wifi.STATION)
 station_cfg={}
 station_cfg.ssid = WIFI_SSID
 station_cfg.pwd = WIFI_PASSWORD
--- station_cfg.ssid="gallardcore"
--- station_cfg.pwd="gallardo437"
 wifi.sta.config(station_cfg)
 
 wifi.sta.connect()
@@ -19,12 +17,12 @@ print(wifi.sta.status())
 print(wifi.sta.getip())
 
 -- SENSORES
--- init mqtt client with logins, keepalive timer 120sec
 PIN_DHT_AFUERA = 1
 PIN_DHT_ADENTRO = 5
 PIN_SOIL_1 = 2 -- SOLO VOY A USAR ESTE
--- PIN_SOIL_2 = 3 -- estos dos los voy a usar después para controlar relays
--- PIN_SOIL_3 = 4
+-- ACTUADORES
+PIN_RIEGO = 3
+PIN_VENTILADOR = 4
 
 -- POST_URL = "http://192.168.0.27/postTest/index.php"
 -- POST_URL = "http://192.168.0.27:8080"
@@ -32,11 +30,13 @@ PIN_SOIL_1 = 2 -- SOLO VOY A USAR ESTE
 POST_URL = "http://leandrogarber.info/proyectos/growAnalytics/save.php"
 
 gpio.mode(PIN_SOIL_1,gpio.OUTPUT)
--- gpio.mode(PIN_SOIL_2,gpio.OUTPUT)
--- gpio.mode(PIN_SOIL_3,gpio.OUTPUT)
+gpio.mode(PIN_RIEGO,gpio.OUTPUT)
+gpio.mode(PIN_VENTILADOR,gpio.OUTPUT)
 
-PROCESS_MILIS = 30000
+PROCESS_MILIS = 60000 * 1
 PROYECTO = 2
+
+-- TIMER DE ENVIO
 
 miTimer = tmr.create()
 miTimer:alarm(PROCESS_MILIS, tmr.ALARM_AUTO, function()
@@ -137,3 +137,42 @@ miTimer:alarm(PROCESS_MILIS, tmr.ALARM_AUTO, function()
 end)
 
 -- miTimer:unregister()
+
+-- TIMER DE RECEPCION
+RECEPCION_MILIS = 5000 * 1
+GET_URL = "http://leandrogarber.info/proyectos/growAnalytics/recepcion.json"
+
+timerRecepcion = tmr.create()
+timerRecepcion:alarm(RECEPCION_MILIS, tmr.ALARM_AUTO, function()
+    
+    http.get(GET_URL, nil, function(code, data)
+        if (code < 0) then
+            print("RECEPCION HTTP request failed")
+        else
+            print("RECIBIENDO")
+
+            obj = sjson.decode(data)
+            
+            print("riego", obj.riego)
+            print("ventilador", obj.ventilador)
+            -- print(code, data)
+
+            if ( obj.riego ) then 
+                gpio.write(PIN_RIEGO,gpio.LOW) --SI ES AL RÉVES !
+            else
+                gpio.write(PIN_RIEGO,gpio.HIGH)
+            end
+
+             if ( obj.ventilador ) then 
+                gpio.write(PIN_VENTILADOR,gpio.LOW) --SI ES AL RÉVES !
+            else
+                gpio.write(PIN_VENTILADOR,gpio.HIGH)
+            end 
+        end
+    end)
+    
+end)
+
+
+
+

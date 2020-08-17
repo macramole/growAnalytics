@@ -4,6 +4,9 @@ var lastValue = {};
 var lastChecked = false;
 var firstDate = null;
 
+let $btnRegar = document.querySelector("#btnRegar")
+let $btnNoRegar = document.querySelector("#btnNoRegar")
+
 var shapes = [
     { //tierra
         type : 'rect',
@@ -58,6 +61,19 @@ var deviceIDs = [
     "humedadTierra2",
     "humedadTierra3"
 ];
+
+$btnRegar.addEventListener('click', () => {
+    fetch('regar.php?v=1')
+        .then(function(response) {
+            $btnRegar.textContent = "Regando..."
+        })
+})
+$btnNoRegar.addEventListener('click', () => {
+    fetch('regar.php?v=0')
+        .then(function(response) {
+            $btnRegar.textContent = "Regar"
+        })
+})
 
 function getLastData() {
     d3.tsv("getLast.php", type, function(error, tsvData) {

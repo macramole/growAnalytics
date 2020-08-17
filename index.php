@@ -11,6 +11,10 @@
 </div>
 
 <ul id="dataLast">
+	<li id="botones">
+		<button id="btnRegar">Regar</button> <br>
+		<button id="btnNoRegar">Dejar de regar</button>
+	<li>
 	<li id="dataLast_temperaturas">
 		<div class="title">Temperatura</div>
 		<ul>
