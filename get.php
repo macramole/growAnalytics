@@ -38,7 +38,6 @@ FROM
 	sensors
 WHERE
 	$queryWhere AND
-	SECOND(created) BETWEEN 0 AND 3 AND
 	idProject = '2'
 ORDER BY
 	id";
