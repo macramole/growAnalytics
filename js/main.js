@@ -60,8 +60,8 @@ var deviceIDs = [
     "humedadAdentro",
     "humedadAfuera",
     "humedadTierra1",
-    "humedadTierra2",
-    "humedadTierra3"
+    // "humedadTierra2",
+    // "humedadTierra3"
 ];
 
 $btnRegar.addEventListener('click', () => {
@@ -261,7 +261,7 @@ function parseData() {
             ]
         };
 
-        Plotly.newPlot("chart", data, layout);
+        Plotly.newPlot("chart", data, layout, {displayModeBar: false});
 
         d3.tsv("getAnnotations.php", typeAnnotations, parseAnnotations() );
 
