@@ -1,3 +1,5 @@
+dofile("wifi-credentials.lua")
+
 -- SERIE
 uart.setup(0,115200,8,0,1)
 
@@ -5,8 +7,8 @@ uart.setup(0,115200,8,0,1)
 wifi.setmode(wifi.STATION)
 
 station_cfg={}
-station_cfg.ssid="casamacramole"
-station_cfg.pwd="supermacramole"
+station_cfg.ssid = WIFI_SSID
+station_cfg.pwd = WIFI_PASSWORD
 -- station_cfg.ssid="gallardcore"
 -- station_cfg.pwd="gallardo437"
 wifi.sta.config(station_cfg)
@@ -20,9 +22,9 @@ print(wifi.sta.getip())
 -- init mqtt client with logins, keepalive timer 120sec
 PIN_DHT_AFUERA = 1
 PIN_DHT_ADENTRO = 5
-PIN_SOIL_1 = 2
-PIN_SOIL_2 = 3
-PIN_SOIL_3 = 4
+PIN_SOIL_1 = 2 -- SOLO VOY A USAR ESTE
+-- PIN_SOIL_2 = 3 -- estos dos los voy a usar después para controlar relays
+-- PIN_SOIL_3 = 4
 
 -- POST_URL = "http://192.168.0.27/postTest/index.php"
 -- POST_URL = "http://192.168.0.27:8080"
@@ -30,12 +32,17 @@ PIN_SOIL_3 = 4
 POST_URL = "http://leandrogarber.info/proyectos/growAnalytics/save.php"
 
 gpio.mode(PIN_SOIL_1,gpio.OUTPUT)
-gpio.mode(PIN_SOIL_2,gpio.OUTPUT)
-gpio.mode(PIN_SOIL_3,gpio.OUTPUT)
+-- gpio.mode(PIN_SOIL_2,gpio.OUTPUT)
+-- gpio.mode(PIN_SOIL_3,gpio.OUTPUT)
+
+PROCESS_MILIS = 30000
+PROYECTO = 2
 
 miTimer = tmr.create()
-miTimer:alarm(5000, tmr.ALARM_AUTO, function()
+miTimer:alarm(PROCESS_MILIS, tmr.ALARM_AUTO, function()
     jsonToSend = "{"
+
+    jsonToSend = jsonToSend .. '"proyecto":"' .. PROYECTO .. '",'
     
     -- DHT
     status, temp, humi, temp_dec, humi_dec = dht.read(PIN_DHT_AFUERA)
@@ -84,8 +91,11 @@ miTimer:alarm(5000, tmr.ALARM_AUTO, function()
 
     -- ADC
     gpio.write(PIN_SOIL_1,gpio.LOW)
-    gpio.write(PIN_SOIL_2,gpio.LOW)
-    gpio.write(PIN_SOIL_3,gpio.LOW)
+    -- gpio.write(PIN_SOIL_2,gpio.LOW)
+    -- gpio.write(PIN_SOIL_3,gpio.LOW)
+
+    -- Acá hay un conexionado especial que usando un solo pin para soil no hace falta
+    -- pero lo dejo porque es más facil.
     
     gpio.write(PIN_SOIL_1,gpio.HIGH)
     tmr.delay(100000)
@@ -93,17 +103,19 @@ miTimer:alarm(5000, tmr.ALARM_AUTO, function()
     gpio.write(PIN_SOIL_1,gpio.LOW)
     tmr.delay(100000)
     
-    gpio.write(PIN_SOIL_2,gpio.HIGH)
-    tmr.delay(100000)
-    jsonToSend = jsonToSend .. '"humedadTierra2":"' .. ( 1024 - adc.read(0) ) .. '", '
-    gpio.write(PIN_SOIL_2,gpio.LOW)
-    tmr.delay(100000)
+    -- gpio.write(PIN_SOIL_2,gpio.HIGH)
+    -- tmr.delay(100000)
+    -- jsonToSend = jsonToSend .. '"humedadTierra2":"' .. ( 1024 - adc.read(0) ) .. '", '
+    jsonToSend = jsonToSend .. '"humedadTierra2":"' .. ( 0 ) .. '", '
+    -- gpio.write(PIN_SOIL_2,gpio.LOW)
+    -- tmr.delay(100000)
     
-    gpio.write(PIN_SOIL_3,gpio.HIGH)
-    tmr.delay(100000)
-    jsonToSend = jsonToSend .. '"humedadTierra3":"' .. ( 1024 - adc.read(0) ) .. '" ' -- guarda que le saque la coma
-    gpio.write(PIN_SOIL_3,gpio.LOW)
-    tmr.delay(100000)
+    -- gpio.write(PIN_SOIL_3,gpio.HIGH)
+    -- tmr.delay(100000)
+    jsonToSend = jsonToSend .. '"humedadTierra3":"' .. ( 0 ) .. '" ' -- guarda que le saque la coma
+    -- jsonToSend = jsonToSend .. '"humedadTierra3":"' .. ( 1024 - adc.read(0) ) .. '" ' -- guarda que le saque la coma
+    -- gpio.write(PIN_SOIL_3,gpio.LOW)
+    -- tmr.delay(100000)
 
     -- SEND JSON
     jsonToSend = jsonToSend .. "}"
