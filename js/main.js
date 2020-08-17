@@ -7,6 +7,8 @@ var firstDate = null;
 let $btnRegar = document.querySelector("#btnRegar")
 let $btnNoRegar = document.querySelector("#btnNoRegar")
 
+let layout = null;
+
 var shapes = [
     { //tierra
         type : 'rect',
@@ -126,6 +128,28 @@ function updateData() {
     }
 }
 
+function parseAnnotations() {
+    return function(error, tsvData) {
+        console.log(tsvData);
+        annotations = layout.annotations || [];
+        for ( row of tsvData ) {
+            annotations.push({
+              x: row.x,
+              y: 0,
+              xref: 'x1',
+              yref: 'paper',
+              text: row.descripcion,
+              showarrow: true,
+              arrowhead: 0,
+              ax: 0,
+              ay: -700,
+              captureevents: true
+            });
+        }
+        Plotly.relayout('chart',{annotations: annotations})
+    }
+}
+
 function parseData() {
     return function(error, tsvData) {
         if (error) throw error;
@@ -154,7 +178,9 @@ function parseData() {
             });
         }
 
-        var layout = {
+        // console.log(data);
+
+        layout = {
             shapes : shapes,
             yaxis : {
                 domain : [ 0, 0.25 ]
@@ -220,20 +246,89 @@ function parseData() {
                         size: 17
                     }
                 },
+                // {
+                //     x: new Date("2020-08-17T18:30:00").getTime(), //"2020-17-08 18:30:00",
+                //     y: 0,
+                //     xref: 'x1',
+                //     yref: 'paper',
+                //     text: 'Annotation Text',
+                //     showarrow: true,
+                //     arrowhead: 0,
+                //     ax: 0,
+                //     ay: -700,
+                //     captureevents : true
+                // }
             ]
         };
 
         Plotly.newPlot("chart", data, layout);
 
+        d3.tsv("getAnnotations.php", typeAnnotations, parseAnnotations() );
+
         firstDate = data[0].x[0];
 
         var $graph = document.getElementById("chart");
         $graph.on("plotly_relayout", function(info) {
-            console.log(info);
+            // console.log(info);
             if ( info["xaxis.range[0]"] ) {
                 getMoreData( info["xaxis.range[0]"].substr(0, 19) );
             }
         });
+        $graph.on("plotly_click", function(info) {
+            console.log(info)
+            if ( info.event.ctrlKey ) {
+                let descripcion = prompt("Descripcion")
+                if ( descripcion != "" ) {
+                    let sendData = {
+                        "fecha" : info.points[0].x,
+                        "descripcion" : descripcion
+                    }
+
+                    fetch("addAnnotation.php", {
+                        method: 'POST', // or 'PUT'
+                        body: JSON.stringify(sendData), // data can be `string` or {object}!
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    // .then(res => res.text() )
+                    .catch(error => console.error('Error:', error))
+
+                    annotation = {
+                      x: info.points[0].x,
+                      y: 0,
+                      xref: 'x1',
+                      yref: 'paper',
+                      text: descripcion,
+                      showarrow: true,
+                      arrowhead: 0,
+                      ax: 0,
+                      ay: -700,
+                      captureevents: true
+                    }
+
+                    annotations = layout.annotations || [];
+                    annotations.push(annotation);
+                    Plotly.relayout('chart',{annotations: annotations})
+                }
+            }
+        });
+        $graph.on("plotly_clickannotation", function(info) {
+            if ( confirm("Delete?") ) {
+                console.log(info)
+                fecha = { "fecha" : info.fullAnnotation.x }
+
+                fetch("removeAnnotation.php", {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(fecha), // data can be `string` or {object}!
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                // .then(res => res.text() )
+                .catch(error => console.error('Error:', error))
+
+                annotations = layout.annotations || [];
+                annotations.splice( info.index, 1 )
+                Plotly.relayout('chart',{annotations: annotations})
+            }
+        })
 
         if ( !lastChecked ) {
             divLastCheck = document.querySelector("#lastCheck span");
@@ -251,27 +346,21 @@ function type(d) {
     d.value = +d.value;
     return d;
 }
+function typeAnnotations(d) {
+    d.x = parseTimeLocal(d.fecha).getTime();
+    return d;
+}
 
 document.body.onload = function() {
     $loading = document.getElementById("loading");
     $loading.className += "hide";
 }
 
-/**
- * You first need to create a formatting function to pad numbers to two digits…
- **/
 function twoDigits(d) {
     if(0 <= d && d < 10) return "0" + d.toString();
     if(-10 < d && d < 0) return "-0" + (-1*d).toString();
     return d.toString();
 }
-
-/**
- * …and then create the method to output the date string as desired.
- * Some people hate using prototypes this way, but if you are going
- * to apply this to more than one Date object, having it as a prototype
- * makes sense.
- **/
 Date.prototype.toMysqlFormat = function() {
     return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
 };
