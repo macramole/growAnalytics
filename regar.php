@@ -5,7 +5,7 @@
 		$regar = true;
 	}
 
-	$response = array( "regar" => $regar, "ventilador" => false  );
+	$response = array( "riego" => $regar, "ventilador" => false  );
 
 	$fp = fopen('recepcion.json', 'w');
 	fwrite($fp, json_encode($response));
