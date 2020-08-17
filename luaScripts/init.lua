@@ -42,7 +42,7 @@ miTimer = tmr.create()
 miTimer:alarm(PROCESS_MILIS, tmr.ALARM_AUTO, function()
     jsonToSend = "{"
 
-    jsonToSend = jsonToSend .. '"proyecto":"' .. PROYECTO .. '",'
+    jsonToSend = jsonToSend .. '"idProject":"' .. PROYECTO .. '",'
     
     -- DHT
     status, temp, humi, temp_dec, humi_dec = dht.read(PIN_DHT_AFUERA)

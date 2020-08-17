@@ -10,7 +10,8 @@ $sensorData = DB::query("
 	FROM
 		sensors
 	WHERE
-		created = ( SELECT MAX(created) FROM sensors )");
+		created = ( SELECT MAX(created) FROM sensors ) AND
+		idProject = '2'");
 
 foreach( $sensorData[0] as $fieldName => $field ) {
 	echo "$fieldName\t";

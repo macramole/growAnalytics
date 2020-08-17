@@ -5,10 +5,17 @@
 	// print_r($data);
 	// print($data["temperaturaAfuera"]);
 
+	$projectID = $data["idProject"];
+
 	foreach ($data as $deviceID => $value) {
+		if ( $deviceID == "idProject" ) {
+			continue;
+		}
+
 		DB::insert('sensors', array(
 		  'deviceID' => $deviceID,
-		  'value' => $value
+		  'value' => $value,
+		  'idProject' => $projectID
 		));
 	}
 

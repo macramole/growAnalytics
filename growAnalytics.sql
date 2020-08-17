@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `sensors` (
   `id` int(11) NOT NULL,
+  `idProject` INT NOT NULL DEFAULT '1',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deviceID` varchar(20) NOT NULL,
   `value` float NOT NULL

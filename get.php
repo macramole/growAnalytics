@@ -15,6 +15,19 @@ if ( $from != null ) {
 	$queryWhere = "created BETWEEN %s AND %s";
 }
 
+// $sql = "
+// SELECT
+// 	created,
+// 	deviceID,
+// 	value
+// FROM
+// 	sensors
+// WHERE
+// 	$queryWhere AND
+// 	SECOND(created) BETWEEN 0 AND 3
+// ORDER BY
+// 	id";
+
 $sql = "
 SELECT
 	created,
@@ -24,7 +37,8 @@ FROM
 	sensors
 WHERE
 	$queryWhere AND
-	SECOND(created) BETWEEN 0 AND 3
+	SECOND(created) BETWEEN 0 AND 3 AND
+	idProject = '2'
 ORDER BY
 	id";
 
