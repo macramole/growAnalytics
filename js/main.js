@@ -100,12 +100,6 @@ function getMoreData( dateFrom ) {
     dateFrom = parseTimeLocal(dateFrom);
     dateFrom = dateFrom.toMysqlFormat();
 
-
-    // console.log("dateFrom");
-    // console.log(dateFrom);
-    // console.log("dateTo");
-    // console.log(dateTo);
-
     d3.tsv("get.php?from=" + dateFrom + "&to=" + dateTo, type, updateData() );
 }
 
@@ -130,21 +124,32 @@ function updateData() {
 
 function parseAnnotations() {
     return function(error, tsvData) {
-        console.log(tsvData);
+        // console.log(tsvData);
         annotations = layout.annotations || [];
+
+        tsvData.sort((a,b) => {
+            return a.x - b.x
+        })
+
+        let annotationHeight = true
         for ( row of tsvData ) {
+            let y = 0//annotationHeight ? 0 : -0.03
+            let ay = annotationHeight ? -700 : -680
+
             annotations.push({
               x: row.x,
-              y: 0,
+              y: y,
               xref: 'x1',
               yref: 'paper',
               text: row.descripcion,
               showarrow: true,
               arrowhead: 0,
               ax: 0,
-              ay: -700,
+              ay: ay,
               captureevents: true
             });
+
+            annotationHeight = !annotationHeight;
         }
         Plotly.relayout('chart',{annotations: annotations})
     }
