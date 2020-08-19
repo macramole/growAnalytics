@@ -3,6 +3,7 @@ var parseTimeLocal = d3.timeParse("%Y-%m-%d %H:%M:%S");
 var lastValue = {};
 var lastChecked = false;
 var firstDate = null;
+let lastAnnotationHeight = true
 
 let $btnRegar = document.querySelector("#btnRegar")
 let $btnNoRegar = document.querySelector("#btnNoRegar")
@@ -122,36 +123,38 @@ function updateData() {
     }
 }
 
+function addAnnotation(x, text) {
+    let y = 0//annotationHeight ? 0 : -0.03
+    let ay = lastAnnotationHeight ? -layout.height*0.94 : -layout.height*0.92
+
+    layout.annotations.push({
+      x: x,
+      y: y,
+      xref: 'x1',
+      yref: 'paper',
+      text: text,
+      showarrow: true,
+      arrowhead: 0,
+      ax: 0,
+      ay: ay,
+      captureevents: true
+    });
+
+    lastAnnotationHeight = !lastAnnotationHeight;
+}
+
 function parseAnnotations() {
     return function(error, tsvData) {
         // console.log(tsvData);
-        annotations = layout.annotations || [];
 
         tsvData.sort((a,b) => {
             return a.x - b.x
         })
 
-        let annotationHeight = true
         for ( row of tsvData ) {
-            let y = 0//annotationHeight ? 0 : -0.03
-            let ay = annotationHeight ? -700 : -680
-
-            annotations.push({
-              x: row.x,
-              y: y,
-              xref: 'x1',
-              yref: 'paper',
-              text: row.descripcion,
-              showarrow: true,
-              arrowhead: 0,
-              ax: 0,
-              ay: ay,
-              captureevents: true
-            });
-
-            annotationHeight = !annotationHeight;
+            addAnnotation(row.x, row.descripcion)
         }
-        Plotly.relayout('chart',{annotations: annotations})
+        Plotly.relayout('chart',{annotations: layout.annotations})
     }
 }
 
@@ -171,15 +174,21 @@ function parseData() {
                 yAxis = "y2";
             }
 
+            let name = "Adentro"
+            if ( deviceID.indexOf("Afuera") != -1 ) {
+                name = "Afuera"
+            }
+            if ( deviceID.indexOf("Tierra") != -1 ) {
+                name = "Humedad"
+            }
+
             data.push({
-                name : deviceID,
+                name : name,
                 x : dataByDeviceID.map( function(d) { return d.date } ),
                 y : dataByDeviceID.map( function(d) { return d.value } ),
                 type : "scatter",
                 yaxis : yAxis,
-                // line : {
-                //     shape: "spline"
-                // }
+
             });
         }
 
@@ -210,13 +219,17 @@ function parseData() {
                 dtick: "D1"
 
             },
-            height: 800,
+
+            width: window.innerWidth - 20,
+            height: window.innerHeight,
+
             margin : {
                 l : 40,
-                // r : 0,
+                r : 0,
                 t : 20,
-                // b : 80
+                b : 30
             },
+            showlegend : false,
             annotations : [
                 {
                     xref: "paper",
@@ -280,7 +293,7 @@ function parseData() {
             }
         });
         $graph.on("plotly_click", function(info) {
-            console.log(info)
+            // console.log(info)
             if ( info.event.ctrlKey ) {
                 let descripcion = prompt("Descripcion")
                 if ( descripcion != "" ) {
@@ -297,22 +310,8 @@ function parseData() {
                     // .then(res => res.text() )
                     .catch(error => console.error('Error:', error))
 
-                    annotation = {
-                      x: info.points[0].x,
-                      y: 0,
-                      xref: 'x1',
-                      yref: 'paper',
-                      text: descripcion,
-                      showarrow: true,
-                      arrowhead: 0,
-                      ax: 0,
-                      ay: -700,
-                      captureevents: true
-                    }
-
-                    annotations = layout.annotations || [];
-                    annotations.push(annotation);
-                    Plotly.relayout('chart',{annotations: annotations})
+                    addAnnotation(info.points[0].x, descripcion)
+                    Plotly.relayout('chart',{annotations: layout.annotations})
                 }
             }
         });

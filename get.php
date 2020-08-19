@@ -11,7 +11,7 @@ if ( isset($_GET["to"]) ) {
 }
 
 //$queryWhere = '1' esto es lo que estaba para que funcione la demo
-$queryWhere = "created >= DATE_SUB(NOW(), INTERVAL 2 DAY)";
+$queryWhere = "created >= DATE_SUB(NOW(), INTERVAL 5 DAY)";
 if ( $from != null ) {
 	$queryWhere = "created BETWEEN %s AND %s";
 }
