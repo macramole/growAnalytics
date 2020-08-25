@@ -102,6 +102,7 @@ function getMoreData( dateFrom ) {
     dateFrom = dateFrom.toMysqlFormat();
 
     d3.tsv("get.php?from=" + dateFrom + "&to=" + dateTo, type, updateData() );
+    d3.tsv("getAnnotations.php?from=" + dateFrom + "&to=" + dateTo, typeAnnotations, parseAnnotations() );
 }
 
 function updateData() {
